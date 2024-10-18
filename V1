@@ -1,143 +1,334 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-   Name = "FHXX HUB | https://discord.gg/KG7Fh4dcBv",
-   LoadingTitle = "FHXX HUB",
-   LoadingSubtitle = "Made By FHXX",
-   ConfigurationSaving = {
-      Enabled = false,
-      FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "FHXX HUB"
-   },
-   Discord = {
-      Enabled = true,
-      Invite = "https://discord.gg/KG7Fh4dcBv", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
-      RememberJoins = false -- Set this to false to make them join the discord every time they load it up
-   },
-   KeySystem = true, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "FHXX Key System",
-      Subtitle = "Key System",
-      Note = "Get Key At https://discord.gg/KG7Fh4dcBv",
-      FileName = "FHXX HUB KEY", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"https://pastebin.com/raw/VfcJfAgN"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-   }
+    Name = "FHXX HUB | https://discord.gg/KG7Fh4dcBv",
+    LoadingTitle = "FHXX HUB",
+    LoadingSubtitle = "Made By FHXX",
+    ConfigurationSaving = {
+        Enabled = false,
+        FolderName = nil, -- Create a custom folder for your hub/game
+        FileName = "FHXX HUB"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "KG7Fh4dcBv", -- Use only the invite code, not the full URL
+        RememberJoins = false
+    },
+    KeySystem = true, -- Enable key system
+    KeySettings = {
+        Title = "FHXX Key System",
+        Subtitle = "Key System",
+        Note = "Get Key At https://discord.gg/KG7Fh4dcBv",
+        FileName = "FHXX HUB KEY",
+        SaveKey = false, -- Key won't be saved permanently
+        GrabKeyFromSite = true,
+        Key = {"https://pastebin.com/raw/VfcJfAgN"} -- List of accepted keys or key URLs
+    }
 })
 
-local MainTab = Window:CreateTab("Info", nil) -- Title, Image
+-- Create main tabs and sections
+local MainTab = Window:CreateTab("Info")
 local MainSection = MainTab:CreateSection("Info")
 
-local PlayerTab = Window:CreateTab("Player", nil) -- Title, Image
-local PlayerSection = MainTab:CreateSection("Player")
+local PlayerTab = Window:CreateTab("Player")
+local PlayerSection = PlayerTab:CreateSection("Player")
 
-local AimLockTab = Window:CreateTab("AimLock", nil) -- Title, Image
-local AimLockSection = MainTab:CreateSection("AimLock")
+local AimLockTab = Window:CreateTab("AimLock")
+local AimLockSection = AimLockTab:CreateSection("AimLock")
 
-local ESPTab = Window:CreateTab("ESP", nil) -- Title, Image
-local ESPSection = MainTab:CreateSection("ESP")
+local ESPTab = Window:CreateTab("ESP")
+local ESPSection = ESPTab:CreateSection("ESP")
 
+-- Notify user to join Discord
 Rayfield:Notify({
-   Title = "Join FHXX Scripts Discord",
-   Content = "https://discord.gg/KG7Fh4dcBv",
-   Duration = 9,
-   Image = nil,
-   Actions = { -- Notification Buttons
-      Ignore = {
-         Name = "Okay!",
-         Callback = function()
-            print("The user tapped Okay!")
-         end
-      },
-   },
-})
-
-local Button = PlayerTab:CreateButton({
-   Name = "Infinite Jump",
-   Callback = function()
-      local uis = game:GetService("UserInputService")
-      local jumpEnabled = true
-
-      uis.InputBegan:Connect(function(input)
-         if input.KeyCode == Enum.KeyCode.Space and jumpEnabled then
-            local player = game.Players.LocalPlayer
-            if player and player.Character and player.Character:FindFirstChild("Humanoid") then
-               player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    Title = "Join FHXX Scripts Discord",
+    Content = "https://discord.gg/KG7Fh4dcBv",
+    Duration = 9,
+    Image = nil,
+    Actions = {
+        Ignore = {
+            Name = "Okay!",
+            Callback = function()
+                print("The user tapped Okay!")
             end
-         end
-      end)
-   end,
+        }
+    }
 })
 
-local Slider = PlayerTab:CreateSlider({
-   Name = "Walk Speed",
-   Range = {0, 100},
-   Increment = 1,
-   Suffix = "Speed",
-   CurrentValue = 16,
-   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-      game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-   end,
-})
-
-local Button = AimLockTab:CreateButton({
-   Name = "AimLock Key Is Q",
-   Callback = function()
-            local players = game:GetService("Players")
-local uis = game:GetService("UserInputService")
-local runService = game:GetService("RunService")
-
-local aimbotEnabled = false
-local targetLocked = false
-local currentTarget = nil
-
-local function aimAt(target)
-    local camera = workspace.CurrentCamera
-    local startPos = camera.CFrame.Position
-    local endPos = target.Character.Head.Position
-    camera.CFrame = CFrame.new(startPos, endPos)
-end
-
-local function lockOnTarget()
-    local mouseLocation = uis:GetMouseLocation()
-    local closestPlayer
-    local shortestDistance = math.huge
-
-    for _, player in pairs(players:GetPlayers()) do
-        if player ~= players.LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
-            local headPos = player.Character.Head.Position
-            local screenPos, onScreen = workspace.CurrentCamera:WorldToViewportPoint(headPos)
-            if onScreen then
-                local distance = (Vector2.new(screenPos.X, screenPos.Y) - mouseLocation).magnitude
-                if distance < shortestDistance then
-                    closestPlayer = player
-                    shortestDistance = distance
+-- Player Tab - Infinite Jump
+local Button = PlayerTab:CreateButton({
+    Name = "Infinite Jump",
+    Callback = function()
+        local uis = game:GetService("UserInputService")
+        uis.InputBegan:Connect(function(input)
+            if input.KeyCode == Enum.KeyCode.Space then
+                local player = game.Players.LocalPlayer
+                if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
                 end
             end
+        end)
+    end
+})
+
+-- Player Tab - Walk Speed
+local Slider = PlayerTab:CreateSlider({
+    Name = "Walk Speed",
+    Range = {0, 100},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 16,
+    Flag = "Slider1", -- Ensure the flag is unique
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = Value
         end
     end
+})
 
-    currentTarget = closestPlayer
+-- AimLock Tab
+local Button = AimLockTab:CreateButton({
+    Name = "AimLock Key Is Q",
+    Callback = function()
+        local players = game:GetService("Players")
+        local uis = game:GetService("UserInputService")
+        local runService = game:GetService("RunService")
+
+        local targetLocked = false
+        local currentTarget = nil
+
+        local function aimAt(target)
+            local camera = workspace.CurrentCamera
+            local startPos = camera.CFrame.Position
+            local endPos = target.Character.Head.Position
+            camera.CFrame = CFrame.new(startPos, endPos)
+        end
+
+        local function lockOnTarget()
+            local mouseLocation = uis:GetMouseLocation()
+            local closestPlayer
+            local shortestDistance = math.huge
+
+            for _, player in pairs(players:GetPlayers()) do
+                if player ~= players.LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+                    local headPos = player.Character.Head.Position
+                    local screenPos, onScreen = workspace.CurrentCamera:WorldToViewportPoint(headPos)
+                    if onScreen then
+                        local distance = (Vector2.new(screenPos.X, screenPos.Y) - mouseLocation).Magnitude
+                        if distance < shortestDistance then
+                            closestPlayer = player
+                            shortestDistance = distance
+                        end
+                    end
+                end
+            end
+
+            currentTarget = closestPlayer
+        end
+
+        uis.InputBegan:Connect(function(input)
+            if input.KeyCode == Enum.KeyCode.Q then
+                if targetLocked then
+                    targetLocked = false
+                    currentTarget = nil
+                    print("Aimlock Disabled")
+                else
+                    targetLocked = true
+                    lockOnTarget()
+                    print("Aimlock Enabled")
+                end
+            end
+        end)
+
+        runService.RenderStepped:Connect(function()
+            if targetLocked and currentTarget and currentTarget.Character and currentTarget.Character:FindFirstChild("Head") then
+                aimAt(currentTarget)
+            end
+        end)
+    end
+})
+
+-- ESP Tab - Boxes
+local Button = ESPTab:CreateButton({
+    Name = "Boxes",
+    Callback = function()
+        local settings = {
+            defaultcolor = Color3.fromRGB(255, 0, 0),
+            teamcheck = false,
+            teamcolor = true
+        }
+
+        local runService = game:GetService("RunService")
+        local players = game:GetService("Players")
+        local localPlayer = players.LocalPlayer
+        local camera = workspace.CurrentCamera
+
+        local espCache = {}
+
+        -- Function to create ESP box for a player
+        local function createEsp(player)
+            local drawings = {}
+            -- Create the main ESP box
+            drawings.box = Drawing.new("Square")
+            drawings.box.Thickness = 1
+            drawings.box.Filled = false
+            drawings.box.Color = settings.defaultcolor
+            drawings.box.Visible = false
+            drawings.box.ZIndex = 2
+
+            -- Create the outline for the box
+            drawings.boxoutline = Drawing.new("Square")
+            drawings.boxoutline.Thickness = 3
+            drawings.boxoutline.Filled = false
+            drawings.boxoutline.Color = Color3.new()
+            drawings.boxoutline.Visible = false
+            drawings.boxoutline.ZIndex = 1
+
+            espCache[player] = drawings
+        end
+
+        -- Function to remove ESP when a player leaves
+        local function removeEsp(player)
+            if espCache[player] then
+                for _, drawing in pairs(espCache[player]) do
+                    drawing:Remove()
+                end
+                espCache[player] = nil
+            end
+        end
+
+        -- Function to update ESP box position
+        local function updateEsp(player, esp)
+            local character = player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                local position, visible = camera:WorldToViewportPoint(character.HumanoidRootPart.Position)
+                esp.box.Visible = visible
+                esp.boxoutline.Visible = visible
+
+                if visible then
+                    -- Calculate box size and position based on distance
+                    local scaleFactor = 1 / (position.Z * math.tan(math.rad(camera.FieldOfView / 2)) * 2) * 1000
+                    local width, height = math.round(4 * scaleFactor), math.round(5 * scaleFactor)
+                    local x, y = math.round(position.X), math.round(position.Y)
+
+                    esp.box.Size = Vector2.new(width, height)
+                    esp.box.Position = Vector2.new(x - width / 2, y - height / 2)
+                    esp.box.Color = settings.teamcolor and player.TeamColor.Color or settings.defaultcolor
+
+                    esp.boxoutline.Size = esp.box.Size
+                    esp.boxoutline.Position = esp.box.Position
+                end
+            else
+                esp.box.Visible = false
+                esp.boxoutline.Visible = false
+            end
+        end
+
+        -- Apply ESP to all current players
+        for _, player in pairs(players:GetPlayers()) do
+            if player ~= localPlayer then
+                createEsp(player)
+            end
+        end
+
+        -- Handle new players joining the game
+        players.PlayerAdded:Connect(function(player)
+            createEsp(player)
+        end)
+
+        -- Handle players leaving the game
+        players.PlayerRemoving:Connect(function(player)
+            removeEsp(player)
+        end)
+
+        -- Continuously update the ESP boxes for all players
+        runService.RenderStepped:Connect(function()
+            for player, drawings in pairs(espCache) do
+                if settings.teamcheck and player.Team == localPlayer.Team then
+                    continue
+                end
+
+                if player ~= localPlayer then
+                    updateEsp(player, drawings)
+                end
+            end
+        end)
+    end
+})
+
+local Button = ESPTab:CreateButton({
+   Name = "Names",
+   Callback = function()
+            -- Services
+local players = game:GetService("Players")
+local runService = game:GetService("RunService")
+local camera = workspace.CurrentCamera
+local localPlayer = players.LocalPlayer
+
+-- Table to store the ESP drawings
+local nameEspCache = {}
+
+-- Function to create name ESP for a player
+local function createNameEsp(player)
+    if player == localPlayer then return end -- Don't show name for local player
+
+    local drawing = Drawing.new("Text")
+    drawing.Text = player.Name
+    drawing.Size = 16
+    drawing.Color = Color3.new(1, 1, 1) -- White text
+    drawing.Outline = true
+    drawing.OutlineColor = Color3.new(0, 0, 0) -- Black outline
+    drawing.Center = true
+    drawing.Visible = false
+
+    nameEspCache[player] = drawing
 end
 
-uis.InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Q then
-        if targetLocked then
-            targetLocked = false
-            currentTarget = nil
-            print("Aimlock Disabled")
-        else
-            targetLocked = true
-            lockOnTarget()
-            print("Aimlock Enabled")
-        end
+-- Function to remove the ESP drawing when a player leaves
+local function removeNameEsp(player)
+    if nameEspCache[player] then
+        nameEspCache[player]:Remove()
+        nameEspCache[player] = nil
     end
+end
+
+-- Function to update the ESP name position
+local function updateNameEsp(player, drawing)
+    local character = player.Character
+    if character and character:FindFirstChild("Head") then
+        local headPosition = character.Head.Position
+        local screenPosition, onScreen = camera:WorldToViewportPoint(headPosition)
+
+        if onScreen then
+            drawing.Position = Vector2.new(screenPosition.X, screenPosition.Y - 20) -- Offset above head
+            drawing.Visible = true
+        else
+            drawing.Visible = false
+        end
+    else
+        drawing.Visible = false
+    end
+end
+
+-- Apply name ESP to all current players
+for _, player in pairs(players:GetPlayers()) do
+    createNameEsp(player)
+end
+
+-- Handle new players joining the game
+players.PlayerAdded:Connect(function(player)
+    createNameEsp(player)
 end)
 
+-- Handle players leaving the game
+players.PlayerRemoving:Connect(function(player)
+    removeNameEsp(player)
+end)
+
+-- Continuously update the name ESPs for all players
 runService.RenderStepped:Connect(function()
-    if targetLocked and currentTarget and currentTarget.Character and currentTarget.Character:FindFirstChild("Head") then
-        aimAt(currentTarget)
+    for player, drawing in pairs(nameEspCache) do
+        updateNameEsp(player, drawing)
     end
 end)
 
