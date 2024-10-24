@@ -348,9 +348,31 @@ local Button = ESPTab:CreateButton({
 local Button = PlayerTab:CreateButton({
    Name = "Instant Interact",
    Callback = function()
-            game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(prompt)
-  fireproximityprompt(prompt)
-end)
+for i,v in pairs(game:GetService("Workspace"):GetDescendants()) do
+    if v:IsA("ProximityPrompt") then
+        v["HoldDuration"] = 0
+    end
+end
+ 
+ 
+game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(v)
+    v["HoldDuration"] = 0
+end) 
+ 
+    print("sub")
+    end,
+ })
+ 
+local Button = exampleTab:CreateButton({
+    Name = "Infinite Stamina",
+    Callback = function()
+    game:GetService("RunService").RenderStepped:Connect(function()
+            repeat wait() until game.Players.LocalPlayer.Character
+            if game.Players.LocalPlayer.Character:FindFirstChild("Aspects") then
+                game.Players.LocalPlayer.Character.Aspects.Stamina.Max.Value = 99999999999999999999999999999
+                game.Players.LocalPlayer.Character.Aspects.Stamina.Value = 99999999999999999999999999999
+            end
+        end)
    end,
 })
 
