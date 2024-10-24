@@ -277,7 +277,7 @@ local function createNameEsp(player)
 
     local drawing = Drawing.new("Text")
     drawing.Text = player.Name
-    drawing.Size = 1
+    drawing.Size = 3
     drawing.Color = Color3.new(1, 1, 1) -- White text
     drawing.Outline = true
     drawing.OutlineColor = Color3.new(0, 0, 0) -- Black outline
