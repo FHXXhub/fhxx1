@@ -1,6 +1,6 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-    Name = "FHXX HUB | https://discord.gg/mm3thHMpDW",
+    Name = "FHXX HUB | https://discord.gg/fmtuTC3rGE",
     LoadingTitle = "FHXX HUB",
     LoadingSubtitle = "Made By FHXX",
     ConfigurationSaving = {
@@ -10,14 +10,14 @@ local Window = Rayfield:CreateWindow({
     },
     Discord = {
         Enabled = true,
-        Invite = "https://discord.gg/mm3thHMpDW", -- Use only the invite code, not the full URL
+        Invite = "https://discord.gg/fmtuTC3rGE", -- Use only the invite code, not the full URL
         RememberJoins = false
     },
     KeySystem = true, -- Enable key system
     KeySettings = {
         Title = "FHXX Key System",
         Subtitle = "Key System",
-        Note = "Get Key At https://discord.gg/mm3thHMpDW",
+        Note = "Get Key At https://discord.gg/fmtuTC3rGE",
         FileName = "FHXX HUB KEY",
         SaveKey = false, -- Key won't be saved permanently
         GrabKeyFromSite = true,
