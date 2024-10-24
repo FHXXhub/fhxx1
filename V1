@@ -358,26 +358,11 @@ end
 game:GetService("ProximityPromptService").PromptButtonHoldBegan:Connect(function(v)
     v["HoldDuration"] = 0
 end) 
- 
-    print("sub")
-    end,
- })
- 
-local Button = exampleTab:CreateButton({
-    Name = "Infinite Stamina",
-    Callback = function()
-    game:GetService("RunService").RenderStepped:Connect(function()
-            repeat wait() until game.Players.LocalPlayer.Character
-            if game.Players.LocalPlayer.Character:FindFirstChild("Aspects") then
-                game.Players.LocalPlayer.Character.Aspects.Stamina.Max.Value = 99999999999999999999999999999
-                game.Players.LocalPlayer.Character.Aspects.Stamina.Value = 99999999999999999999999999999
-            end
-        end)
    end,
 })
 
 local Button = PlayerTab:CreateButton({
-   Name = "HitBox Expander",
+   Name = "HitBox Expander Currently not working",
    Callback = function()
             _G.HeadSize = 10
 _G.Disabled = true
